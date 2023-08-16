@@ -139,7 +139,7 @@ function addMapPoints() {
 
     map.on("click", "locations", (e) => {
         //find ID of collection item in array
-        const ID = e.features[0].properties.newOrder;
+        const ID = e.features[0].properties.arrayID;
         const newOrder = e.features[0].properties.newOrder;
         console.log(ID);
         console.log(newOrder)
