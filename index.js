@@ -1,11 +1,11 @@
 //-----------MAPBOX SETUP CODE BELOW-----------
-
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // !!! REPLACE ACCESS TOKEN WITH YOURS HERE !!!
 mapboxgl.accessToken =
     "pk.eyJ1IjoiY29tbW9ua25vd2xlZGdlIiwiYSI6ImNqc3Z3NGZxcDA4NGo0OXA2dzd5eDJvc2YifQ.f68VZ1vlc6s3jg3JgShd0A";
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 
 // create empty locations geojson object
 let mapLocations = {
@@ -34,10 +34,16 @@ if (mq.matches) {
 // Add zoom and rotation controls to the map.
 map.addControl(new mapboxgl.NavigationControl());
 
+
+
+//-----------WEBFLOW CMS CODE BELOW-----------
+
+
 // Get cms items
 let listLocations = document.getElementById("location-list").childNodes;
 
 // For each colleciton item, grab hidden fields and convert to geojson proerty
+// !! This will need adjusting for every project
 function getGeoData() {
     listLocations.forEach(function (location, i) {
         let locationLat = location.querySelector("#locationLatitude").value;
@@ -46,9 +52,13 @@ function getGeoData() {
         let siteType = location.querySelector(".sitetype").innerHTML;
         let coordinates = [locationLong, locationLat];
         let locationID = location.querySelector("#locationID").value;
-        //add array ID
+        
+        //this is so every item has an initial ID 
         let arrayID = i + 1 - 1;
+        //this is the new order of the cms items if geocoding is used
         let newOrder = "";
+
+        //add to the array
         let geoData = {
             type: "Feature",
             geometry: {
@@ -73,6 +83,12 @@ console.log(mapLocations.features)
 
 // Invoke function
 getGeoData();
+
+
+
+
+//-----------ADDING POINTS CODE BELOW-----------
+
 
 // define mapping function to be invoked later
 function addMapPoints() {
@@ -123,7 +139,11 @@ function addMapPoints() {
 
     map.on("click", "locations", (e) => {
         //find ID of collection item in array
-        const ID = e.features[0].properties.arrayID;
+        const ID = e.features[0].properties.newOrder;
+        const newOrder = e.features[0].properties.newOrder;
+        console.log(ID);
+        console.log(newOrder)
+
         //add popup
         addPopup(e);
         //show webflow Collection module
@@ -136,6 +156,7 @@ function addMapPoints() {
         //find collection item by array ID and show it
         $('.location-map_card-wrap').eq(ID).toggleClass('is--selected');
 
+        // Scroll to the cms item on page
         $("html").animate(
             {
                 scrollTop: $(".locations-map_item").eq(ID).offset().top
@@ -172,6 +193,10 @@ map.on("load", function (e) {
     addMapPoints();
 });
 
+
+//-----------GEOCODING CODE BELOW-----------
+
+
 const geocoder = new MapboxGeocoder({
     accessToken: mapboxgl.accessToken, // Set the access token
     mapboxgl: mapboxgl, // Set the mapbox-gl instance
@@ -182,7 +207,7 @@ const geocoder = new MapboxGeocoder({
 geocoder.on("result", (event) => {
     const searchResult = event.result.geometry;
     console.log(searchResult);
-    // Code for the next step will go here
+    // Use Turf to measure distances between the place user searched and items in the cms
     const options = { units: "miles" };
     for (const loc of mapLocations.features) {
         loc.properties.distance = turf.distance(
@@ -191,7 +216,7 @@ geocoder.on("result", (event) => {
             options
         );
     }
-    // Code for the next step will go here
+    // Order the list based on promixity
     mapLocations.features.sort((a, b) => {
         if (a.properties.distance > b.properties.distance) {
             return 1;
@@ -206,11 +231,10 @@ geocoder.on("result", (event) => {
     getGeoData(mapLocations);
 
 
-    // Code for the next step will go here
+    // Function that updates the order of cms items and scrolls user back to the top
 
     function updateOrderList() {
 
-        //updating the new order property with the order of proximity determined above
 
         mapLocations.features.forEach(function (location, i) {
 
@@ -220,8 +244,11 @@ geocoder.on("result", (event) => {
 
         console.log(mapLocations.features)
 
+    
+        
 
-        //adding the order to a hidden text field in the location items
+
+        //adding the new order number to a hidden text field in the location items that can be used to s
 
 
         $(".locations-map_item").each(function (i) {
@@ -230,8 +257,14 @@ geocoder.on("result", (event) => {
             let arrayID = mapLocations.features[i].properties.arrayID
 
 
+            $('.array-id-num').eq(arrayID).text(arrayID);
             $('.new-order-num').eq(arrayID).text(newOrder);
+
+
         });
+
+
+        //Scrolls back to the top
 
         $("html").animate(
             {
@@ -244,8 +277,8 @@ geocoder.on("result", (event) => {
         //using that text field to sort the items
 
     }
-    updateOrderList()
 
+    // 
     $(function () {
         var theContainer = $("#location-list"), // You could use body if all the rows are children of body
             theRows = $(".locations-map_item").get() // an array
@@ -258,20 +291,22 @@ geocoder.on("result", (event) => {
             //return aLoc < bLoc ? -1 : aLoc > bLoc ? 1 : -1
         })
         theContainer.append(theRows)
-
-
     })
-
-
+    updateOrderList()
 
 
 });
 
 map.addControl(geocoder, "top-left");
 
-////////////////////////////
-//////////////////////////////////
-//Centring map with clicking col-item
+
+
+//-----------INTERACTIVITY CODE BELOW-----------
+
+
+//Centring map with clicking on csm item
+
+
 
 $(".locations-map_list .locations-map_item").click(function () {
     var index = $(this).index();
@@ -311,10 +346,6 @@ $(".locations-map_list .locations-map_item").click(function () {
     popup.addTo(map);
 });
 
-//close side nav with button
-$(".close-block").click(function () {
-    $(".locations-map_wrapper").eq[i].removeClass("is--show");
-});
 
 //////////hover stuff
 
