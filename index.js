@@ -79,7 +79,6 @@ function getGeoData() {
         }
     });
 }
-console.log(mapLocations.features)
 
 // Invoke function
 getGeoData();
@@ -141,8 +140,8 @@ function addMapPoints() {
         //find ID of collection item in array
         const ID = e.features[0].properties.arrayID;
         const newOrder = e.features[0].properties.newOrder;
-        console.log(ID);
-        console.log(newOrder)
+        console.log("Array ID: " + ID);
+        console.log("New Order: " + newOrder)
 
         //add popup
         addPopup(e);
@@ -206,7 +205,6 @@ const geocoder = new MapboxGeocoder({
 
 geocoder.on("result", (event) => {
     const searchResult = event.result.geometry;
-    console.log(searchResult);
     // Use Turf to measure distances between the place user searched and items in the cms
     const options = { units: "miles" };
     for (const loc of mapLocations.features) {
@@ -239,14 +237,11 @@ geocoder.on("result", (event) => {
         mapLocations.features.forEach(function (location, i) {
 
             mapLocations.features[i].properties.newOrder = i
-
+            
         })
 
+
         console.log(mapLocations.features)
-
-    
-        
-
 
         //adding the new order number to a hidden text field in the location items that can be used to s
 
@@ -311,7 +306,6 @@ map.addControl(geocoder, "top-left");
 $(".locations-map_list .locations-map_item").click(function () {
     var index = $(this).index();
     var arrayID = mapLocations.features[index].properties.arrayID;
-    console.log(index);
     let selectedCoords = mapLocations.features[index].geometry.coordinates;
     let description = mapLocations.features[index].properties.description;
 
