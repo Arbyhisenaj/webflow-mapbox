@@ -35,12 +35,10 @@ async function getGeoData() {
 
 
   listLocations.forEach(async function (location, i) {
-    //let locationLat = location.querySelector("#locationLatitude").value;
-    //let locationLong = location.querySelector("#locationLongitude").value;
+    let locationLat = location.querySelector("#locationLatitude").value;
+    let locationLong = location.querySelector("#locationLongitude").value;
     
     let postcode = location.querySelector("#postcode").textContent; // Add this line
-    let locationLat = "";
-    let locationLong = "";
     //let locationLong = location.querySelector("#locationLongitude").value;
     let locationInfo = location.querySelector(".locations-map_card").innerHTML;
     let siteType = location.querySelector(".sitetype").innerHTML;
@@ -52,16 +50,16 @@ async function getGeoData() {
     // This is the dyn Order of the CMS items if geocoding is used
     let dynOrder = i;
     
-    // Use the getLatLongFromPostcode function
-    if (postcode) {
-        const coordinatesFromPostcode = await getLatLongFromPostcode(postcode);
-        if (coordinatesFromPostcode) {
-            // Set locationLat and locationLong based on the API response
-            locationLat = coordinatesFromPostcode[1];
-            locationLong = coordinatesFromPostcode[0];
-            coordinates = coordinatesFromPostcode;
-        }
-    }
+    // // Use the getLatLongFromPostcode function
+    // if (postcode) {
+    //     const coordinatesFromPostcode = await getLatLongFromPostcode(postcode);
+    //     if (coordinatesFromPostcode) {
+    //         // Set locationLat and locationLong based on the API response
+    //         locationLat = coordinatesFromPostcode[1];
+    //         locationLong = coordinatesFromPostcode[0];
+    //         coordinates = coordinatesFromPostcode;
+    //     }
+    // }
 
     // Add to the array
     let geoData = {
@@ -87,38 +85,29 @@ async function getGeoData() {
 }
 
 // Create a function to make an API call to get lat and long from a postcode
-async function getLatLongFromPostcode(postcode) {
-    const apiUrl = "https://api.postcode.io/postcodes";
-    const requestBody = {
-        postcode: postcode
-    };
+// async function getLatLongFromPostcode(postcode) {
+//     const apiUrl = `https://api.postcode.io/postcodes/${postcode}`;
+//     console.log("API URL:", apiUrl);
 
-    try {
-        const response = await fetch(apiUrl, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-                // Add any other headers as needed
-            },
-            body: JSON.stringify(requestBody)
-        });
+    
+//     try {
+//         const response = await fetch(apiUrl);
+//         const data = await response.json();
 
-        const data = await response.json();
+//         if (data && data.result && data.result.latitude && data.result.longitude) {
+//             return [data.result.longitude, data.result.latitude];
+//         } else {
+//             console.error("Invalid response from postcode.io API");
+//             return null;
+//         }
+//     } catch (error) {
+//         console.error("Error fetching data from postcode.io API:", error);
+//         return null;
+//     }
+// }
 
-        if (data && data.result && data.result.latitude && data.result.longitude) {
-            return [data.result.longitude, data.result.latitude];
-        } else {
-            console.error("Invalid response from postcode.io API");
-            return null;
-        }
-    } catch (error) {
-        console.error("Error fetching data from postcode.io API:", error);
-        return null;
-    }
-}
-
-// Invoke the getGeoData function
-getGeoData();
+// // Invoke the getGeoData function
+// getGeoData();
 
 
 
