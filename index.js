@@ -106,8 +106,8 @@ async function getGeoData() {
 //     }
 // }
 
-// // Invoke the getGeoData function
-// getGeoData();
+// Invoke the getGeoData function
+getGeoData();
 
 
 
