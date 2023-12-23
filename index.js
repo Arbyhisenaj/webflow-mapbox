@@ -13,7 +13,9 @@ let selectedMapLocations = [];
 // Initialize map and load in #map wrapper
 let map = new mapboxgl.Map({
   container: "map",
-  style: "mapbox://styles/mapbox/light-v11",
+  //style: "mapbox://styles/mapbox/light-v11",
+  style: "mapbox://styles/commonknowledge/clqfcx8dc00i301nw55apf380/draft"
+  ,
   center: [-3.205, 54.437],
   zoom: 5.36
 });
@@ -117,8 +119,8 @@ $(".locations-map_item").each(function (i) {
   let dynOrder = mapLocations.features[i].properties.dynOrder;
   let arrayID = mapLocations.features[i].properties.arrayID;
 
-  $('.array-id-num').eq(arrayID).text(arrayID);
-  $('.new-order-num').eq(arrayID).text(dynOrder);
+  $('#array-id-num').eq(arrayID).text(arrayID);
+  $('#dyn-order-num').eq(arrayID).text(dynOrder);
 });
 
 // ----------- ADDING POINTS CODE BELOW -----------
@@ -137,12 +139,12 @@ function addMapPoints() {
       "circle-radius": 8,
       "circle-stroke-width": 1,
       "circle-opacity": 1,
-      "circle-stroke-color": "#405F3B",
+      "circle-stroke-color": "white",
       "circle-color": [
         "match",
         ["get", "siteType"],
-        "IRC", "pink",
-        "RSTHF", "teal",
+        "Immigration Removal Centre", "#FFE27A",
+        "Short Term Holding Facility", "#2D19A9",
         /* other */ "#ccc"
       ]
     }
@@ -198,16 +200,16 @@ function findIndexInCMSListByID(featureID) {
 }
 
   // Center the map on the coordinates of any clicked circle from the 'locations' layer
-  map.on("click", "locations", (e) => {
-    map.flyTo({
-      center: e.features[0].geometry.coordinates,
-      speed: 0.5,
-      curve: 1,
-      easing(t) {
-        return t;
-      }
-    });
-  });
+//   map.on("click", "locations", (e) => {
+//     map.flyTo({
+//       center: e.features[0].geometry.coordinates,
+//       speed: 0.5,
+//       curve: 1,
+//       easing(t) {
+//         return t;
+//       }
+//     });
+//   });
 
   // Change the cursor to a pointer when the mouse is over the 'locations' layer
   map.on("mouseenter", "locations", () => {
@@ -255,7 +257,7 @@ geocoder.on("result", (event) => {
       let arrayID = mapLocations.features[i].properties.arrayID;
 
       $('.array-id-num').eq(arrayID).text(arrayID);
-      $('.new-order-num').eq(arrayID).text(dynOrder);
+      $('.dyn-order-num').eq(arrayID).text(dynOrder);
     });
 
     $("html").animate({
@@ -272,8 +274,8 @@ geocoder.on("result", (event) => {
       theRows = $(".locations-map_item").get();
 
     theRows = theRows.sort(function (a, b) {
-      var aLoc = $(".new-order-num", a).text(),
-        bLoc = $(".new-order-num", b).text();
+      var aLoc = $(".dyn-order-num", a).text(),
+        bLoc = $(".dyn-order-num", b).text();
       return aLoc.localeCompare(bLoc, undefined, { numeric: true, sensitivity: 'base' });
     });
 
@@ -307,7 +309,7 @@ $(".locations-map_list .locations-map_item").click(function () {
     }
   });
 
-  const popup = new mapboxgl.Popup()
+  const popup = new mapboxgl.Popup({focusAfterOpen: false})
     .setLngLat(selectedCoords)
     .setHTML(description);
 
@@ -342,3 +344,12 @@ map.on("mouseleave", "locations", () => {
   map.getCanvas().style.cursor = "";
   popup.remove();
 });
+
+
+// $('.dc-modal-btn').on('click', function() {
+//     $('#dc-modal').find('.contact-modal1_component').css('display', 'flex');
+//   });
+
+// $('.modal_close-button').on('click', function() {
+//   $(this).closest('.contact-modal1_component').css('display', 'hide');
+// });
