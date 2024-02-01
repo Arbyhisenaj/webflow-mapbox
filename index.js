@@ -137,14 +137,15 @@ function addMapPoints() {
     },
     paint: {
       "circle-radius": 8,
-      "circle-stroke-width": 1,
+      "circle-stroke-width": 3,
+      "circle-stroke-opacity": 0.4,
       "circle-opacity": 1,
       "circle-stroke-color": "white",
       "circle-color": [
         "match",
         ["get", "siteType"],
-        "Immigration Removal Centre", "#FFE27A",
-        "Short Term Holding Facility", "#2D19A9",
+        "Immigration Removal Centre", "#2D19A9",
+        "Short Term Holding Facility", "#57B598",
         /* other */ "#ccc"
       ]
     }
