@@ -2,6 +2,17 @@
 mapboxgl.accessToken = "pk.eyJ1IjoiY29tbW9ua25vd2xlZGdlIiwiYSI6ImNqc3Z3NGZxcDA4NGo0OXA2dzd5eDJvc2YifQ.f68VZ1vlc6s3jg3JgShd0A";
 
 
+let nodeColors =    [
+  "match",
+  ["get", "siteType"], /* Name of options in cms
+  /* Name of options in cms, color */
+  "Immigration Removal Centre", "#2D19A9",
+  "Short Term Holding Facility", "#57B598",
+  /* other */ "#ccc"
+]
+
+
+
 // Create empty locations GeoJSON object
 let mapLocations = {
   type: "FeatureCollection",
@@ -40,7 +51,6 @@ async function getGeoData() {
     let locationLat = location.querySelector("#locationLatitude").value;
     let locationLong = location.querySelector("#locationLongitude").value;
     
-    let postcode = location.querySelector("#postcode").textContent; // Add this line
     //let locationLong = location.querySelector("#locationLongitude").value;
     let locationInfo = location.querySelector(".locations-map_card").innerHTML;
     let siteType = location.querySelector(".sitetype").innerHTML;
@@ -52,17 +62,7 @@ async function getGeoData() {
     // This is the dyn Order of the CMS items if geocoding is used
     let dynOrder = i;
     
-    // // Use the getLatLongFromPostcode function
-    // if (postcode) {
-    //     const coordinatesFromPostcode = await getLatLongFromPostcode(postcode);
-    //     if (coordinatesFromPostcode) {
-    //         // Set locationLat and locationLong based on the API response
-    //         locationLat = coordinatesFromPostcode[1];
-    //         locationLong = coordinatesFromPostcode[0];
-    //         coordinates = coordinatesFromPostcode;
-    //     }
-    // }
-
+ 
     // Add to the array
     let geoData = {
       type: "Feature",
@@ -72,7 +72,6 @@ async function getGeoData() {
       },
       properties: {
         id: locationID,
-        postcode: postcode,
         description: locationInfo,
         arrayID: arrayID,
         dynOrder: dynOrder,
@@ -85,30 +84,6 @@ async function getGeoData() {
     }
   });
 }
-
-// Create a function to make an API call to get lat and long from a postcode
-// async function getLatLongFromPostcode(postcode) {
-//     const apiUrl = `https://api.postcode.io/postcodes/${postcode}`;
-//     console.log("API URL:", apiUrl);
-
-    
-//     try {
-//         const response = await fetch(apiUrl);
-//         const data = await response.json();
-
-//         if (data && data.result && data.result.latitude && data.result.longitude) {
-//             return [data.result.longitude, data.result.latitude];
-//         } else {
-//             console.error("Invalid response from postcode.io API");
-//             return null;
-//         }
-//     } catch (error) {
-//         console.error("Error fetching data from postcode.io API:", error);
-//         return null;
-//     }
-// }
-
-// Invoke the getGeoData function
 getGeoData();
 
 
@@ -141,13 +116,8 @@ function addMapPoints() {
       "circle-stroke-opacity": 0.4,
       "circle-opacity": 1,
       "circle-stroke-color": "white",
-      "circle-color": [
-        "match",
-        ["get", "siteType"],
-        "Immigration Removal Centre", "#2D19A9",
-        "Short Term Holding Facility", "#57B598",
-        /* other */ "#ccc"
-      ]
+      "circle-color": nodeColors
+
     }
   });
 
