@@ -8,6 +8,7 @@ let nodeColors =    [
   /* Name of options in cms, color */
   "Immigration Removal Centre", "#2D19A9",
   "Short Term Holding Facility", "#57B598",
+  "Prison", "#FFE27A",
   /* other */ "#ccc"
 ]
 
